@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Registrar</button>
+</form>
+<h1>Feed de Projetos</h1>
+<ul>
+    {% for projeto in projetos %}
+    <li>
+        <h2>{{ projeto.titulo }}</h2>
+        <p>{{ projeto.descricao }}</p>
+        <p><strong>Autor:</strong> {{ projeto.autor.username }}</p>
+        <p><strong>Criado em:</strong> {{ projeto.data_criacao }}</p>
+    </li>
+    {% endfor %}
+</ul>
+<h1>Feed de Projetos</h1>
+
+<form method="get">
+    <input type="text" name="q" placeholder="Buscar projetos..." value="{{ query }}">
+    <button type="submit">Buscar</button>
+</form>
+
+<ul>
+    {% for projeto in projetos %}
+    <li>
+        <h2>{{ projeto.titulo }}</h2>
+        <p>{{ projeto.descricao }}</p>
+        <p><strong>Autor:</strong> {{ projeto.autor.username }}</p>
+        <p><strong>Criado em:</strong> {{ projeto.data_criacao }}</p>
+    </li>
+    {% endfor %}
+</ul>
+<h1>Dashboard - Meus Projetos</h1>
+
+<a href="{% url 'adicionar_projeto' %}">Adicionar Projeto</a>
+
+<ul>
+    {% for projeto in projetos %}
+    <li>
+        <h2>{{ projeto.titulo }}</h2>
+        <p>{{ projeto.descricao }}</p>
+        <a href="{% url 'editar_projeto' projeto.id %}">Editar</a> |
+        <a href="{% url 'deletar_projeto' projeto.id %}">Deletar</a>
+    </li>
+    {% endfor %}
+</ul>
+<h1>Adicionar Projeto</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar</button>
+</form>
+
+<a href="{% url 'dashboard' %}">Voltar ao Dashboard</a>
+<h1>Editar Projeto</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Salvar</button>
+</form>
+
+<a href="{% url 'dashboard' %}">Voltar ao Dashboard</a>
+<!-- templates/base.html -->
+<nav>
+    <ul>
+        <li><a href="{% url 'feed' %}">Feed</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+        <li><a href="{% url 'registrar_usuario' %}">Registrar</a></li>
+        <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+    </ul>
+</nav>
+
+{% block content %}
+{% endblock %}
